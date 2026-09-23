@@ -1,9 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GameHubAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace GameHubAPI.Data
 {
     public class AppDbContext : DbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+        public DbSet<User> Users => Set<User>();
     }
 }
