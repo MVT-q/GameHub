@@ -1,4 +1,7 @@
 using GameHubAPI.Data;
+using GameHubAPI.Models;
+using GameHubAPI.Sevices;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameHubAPI
@@ -17,6 +20,10 @@ namespace GameHubAPI
             {
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+
+            builder.Services.AddScoped<AuthService>();
 
             var app = builder.Build();
 

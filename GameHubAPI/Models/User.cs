@@ -11,5 +11,10 @@ namespace GameHubAPI.Models
         public string PasswordHash { get; private set; } = "";
 
         public UserRole Role { get; set; } = UserRole.User;
+
+        public void SetPasswordHash(string passwordHash)
+        {
+            PasswordHash = passwordHash;
+        }
     }
 }
