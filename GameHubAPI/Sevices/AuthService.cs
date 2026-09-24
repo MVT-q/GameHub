@@ -1,5 +1,6 @@
 ﻿using GameHubAPI.Data;
 using GameHubAPI.DTOs.Auth;
+using GameHubAPI.Exceptions;
 using GameHubAPI.Models;
 using GameHubAPI.Settings;
 using Microsoft.AspNetCore.Identity;
@@ -29,6 +30,11 @@ namespace GameHubAPI.Sevices
 
         public async Task RegisterAsync(RegisterDto request)
         {
+            var exists = await _context.Users.AnyAsync(u => u.Username == request.Username);
+
+            if (exists)
+                throw new UserAlreadyExistsException("Username already exists");
+
             var user = new User
             {
                 Username = request.Username

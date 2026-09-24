@@ -1,4 +1,5 @@
 using GameHubAPI.Data;
+using GameHubAPI.Middleware;
 using GameHubAPI.Models;
 using GameHubAPI.Settings;
 using GameHubAPI.Sevices;
@@ -60,6 +61,8 @@ namespace GameHubAPI
             }
 
             app.UseHttpsRedirection();
+
+            app.UseExceptionHandlingMiddleware();
 
             app.UseAuthentication();
 
