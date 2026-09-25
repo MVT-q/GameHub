@@ -1,7 +1,7 @@
 # .NET build
-bin/
-obj/
-publish/
+**/bin/
+**/obj/
+**/publish/
 
 # .NET / NuGet
 *.nupkg
@@ -23,17 +23,18 @@ publish/
 
 # Secrets / local configuration
 secrets.json
+**/secrets.json
 
 # Angular / Node
-node_modules/
-dist/
-tmp/
-out-tsc/
-.bazel-out/
-.angular/cache/
-coverage/
-.sass-cache/
-.typings/
+**/node_modules/
+**/dist/
+**/tmp/
+**/out-tsc/
+**/.bazel-out/
+**/.angular/cache/
+**/coverage/
+**/.sass-cache/
+**/.typings/
 npm-debug.log
 yarn-error.log
 
