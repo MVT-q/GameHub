@@ -58,6 +58,16 @@ namespace GameHubAPI
                     };
                 });
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("GameHubClient", policy =>
+                {
+                    policy.WithOrigins("http://localhost:4200")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
+
             builder.Services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -78,9 +88,11 @@ namespace GameHubAPI
                 app.UseSwaggerUI();
             }
 
+            app.UseExceptionHandlingMiddleware();
+
             app.UseHttpsRedirection();
 
-            app.UseExceptionHandlingMiddleware();
+            app.UseCors("GameHubClient");
 
             app.UseAuthentication();
 
