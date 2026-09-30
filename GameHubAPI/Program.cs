@@ -80,6 +80,8 @@ namespace GameHubAPI
 
             builder.Services.AddScoped<AuthService>();
 
+            builder.Services.AddScoped<GameService>();
+
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
