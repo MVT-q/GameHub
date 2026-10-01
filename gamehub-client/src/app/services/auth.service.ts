@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { LoginRequest } from '../models/login-request.model';
+import { LoginRequest } from '../models/auth/login-request.model';
 import { Observable } from 'rxjs';
-import { LoginResponse } from '../models/login-response.model';
-import { RegisterRequest } from '../models/register-request.model';
+import { LoginResponse } from '../models/auth/login-response.model';
+import { RegisterRequest } from '../models/auth/register-request.model';
 
 @Injectable({
   providedIn: 'root',
@@ -19,5 +19,13 @@ export class AuthService {
 
   register(register: RegisterRequest): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/register`, register);
+  }
+
+  isLoggedIn(): boolean {
+    return localStorage.getItem('token') !== null;
+  }
+
+  logout(): void {
+    localStorage.removeItem('token');
   }
 }

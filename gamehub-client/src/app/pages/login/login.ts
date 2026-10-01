@@ -28,7 +28,7 @@ export class Login {
         next: (response) => {
           localStorage.setItem('token', response.token);
 
-          console.log('logged in');
+          this.router.navigate(['/game-catalog']);
         },
         error: (error) => {
           console.error(error);
