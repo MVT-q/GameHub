@@ -1,0 +1,11 @@
+@if (game) {
+  <h1>{{ game.title }}</h1>
+
+  <p>{{ game.releaseDate }}</p>
+
+  <p>{{ game.description }}</p>
+
+  <p>{{ getGenreLabel(game.genre) }}</p>
+
+  <p>{{ game.updatedAt ?? '—' }}</p>
+}

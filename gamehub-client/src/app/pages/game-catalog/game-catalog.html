@@ -1,2 +1,7 @@
 <button type="button" (click)="logout()">Logout</button>
-<p>game-catalog works!</p>
+
+<h1>Game Catalog</h1>
+
+@for (game of games; track game.id) {
+  <p (click)="toGameDetails(game.id)">{{ game.title }}</p>
+}
