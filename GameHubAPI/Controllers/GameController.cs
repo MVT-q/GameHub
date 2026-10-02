@@ -48,5 +48,17 @@ namespace GameHubAPI.Controllers
                 new { gameId = game.Id },
                 game);
         }
+
+        [Authorize]
+        [HttpPut("{gameId:int}")]
+        public async Task<ActionResult<GameDetailsDto>> UpdateGameInfo(int gameId, UpdateGameInfoDto dto)
+        {
+            var game = await _gameService.UpdateGameInfoAsync(gameId, dto);
+
+            if (game == null)
+                return NotFound();
+
+            return Ok(game);
+        }
     }
 }

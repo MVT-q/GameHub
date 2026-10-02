@@ -50,6 +50,25 @@ namespace GameHubAPI.Sevices
             return ToGameDetailsDto(game);
         }
 
+        public async Task<GameDetailsDto?> UpdateGameInfoAsync(int gameId, UpdateGameInfoDto dto)
+        {
+            var game = await _context.Games.FirstOrDefaultAsync(g => g.Id == gameId);
+
+            if (game == null)
+                return null;
+
+            game.Title = dto.Title;
+            game.ReleaseDate = dto.ReleaseDate;
+            game.Description = dto.Description;
+            game.HasDedicatedServers = dto.HasDedicatedServers;
+            game.Genre = dto.Genre;
+            game.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
+            return ToGameDetailsDto(game);
+        }
+
         private static GameListItemDto ToGameListDto(Game game)
         {
             return new GameListItemDto

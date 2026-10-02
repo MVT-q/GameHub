@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace GameHubAPI.DTOs.Games
 {
-    public class AddGameDto
+    public class UpdateGameInfoDto
     {
         [Required]
         public string Title { get; set; } = "";
