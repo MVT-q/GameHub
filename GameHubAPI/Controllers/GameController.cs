@@ -36,5 +36,17 @@ namespace GameHubAPI.Controllers
 
             return Ok(game);
         }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<ActionResult<GameDetailsDto>> AddGame(AddGameDto dto)
+        {
+            var game = await _gameService.AddGameAsync(dto);
+
+            return CreatedAtAction(
+                nameof(GetGameById),
+                new { gameId = game.Id },
+                game);
+        }
     }
 }
