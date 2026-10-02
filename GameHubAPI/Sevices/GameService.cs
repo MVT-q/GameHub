@@ -69,6 +69,20 @@ namespace GameHubAPI.Sevices
             return ToGameDetailsDto(game);
         }
 
+        public async Task<bool> DeleteGameAsync(int gameId)
+        {
+            var game = await _context.Games.FirstOrDefaultAsync(g => g.Id == gameId);
+
+            if (game == null)
+                return false;
+
+            _context.Games.Remove(game);
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
         private static GameListItemDto ToGameListDto(Game game)
         {
             return new GameListItemDto

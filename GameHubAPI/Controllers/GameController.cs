@@ -1,4 +1,5 @@
 ﻿using GameHubAPI.DTOs.Games;
+using GameHubAPI.Models;
 using GameHubAPI.Sevices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -59,6 +60,18 @@ namespace GameHubAPI.Controllers
                 return NotFound();
 
             return Ok(game);
+        }
+
+        [Authorize]
+        [HttpDelete("{gameId:int}")]
+        public async Task<IActionResult> DeleteGame(int gameId)
+        {
+            var result = await _gameService.DeleteGameAsync(gameId);
+
+            if (result == false)
+                return NotFound();
+
+            return NoContent();
         }
     }
 }
