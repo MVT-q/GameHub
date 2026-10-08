@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Game } from '../../models/game/game.model';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { GameService } from '../../services/game.service';
 import { GameGenre } from '../../enums/game-genre';
 
@@ -28,6 +28,7 @@ export class GameDetails implements OnInit {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly gameService: GameService,
+    private readonly router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -44,6 +45,10 @@ export class GameDetails implements OnInit {
   }
 
   getGenreLabel(genre: GameGenre): string {
-    return this.genres.find(item => item.value === genre)?.label ?? 'Unknown';
+    return this.genres.find((item) => item.value === genre)?.label ?? 'Unknown';
+  }
+
+  toEditGame(): void {
+    this.router.navigate(['/game-catalog', this.gameId, 'edit']);
   }
 }

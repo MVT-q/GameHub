@@ -34,8 +34,23 @@ export class GameCatalog implements OnInit {
     });
   }
 
+  deleteGame(gameId: number): void {
+    this.gameService.deleteGame(gameId).subscribe({
+      next: () => {
+        this.games = this.games.filter((game) => game.id !== gameId);
+      },
+      error: (error) => {
+        console.error(error);
+      },
+    });
+  }
+
   toGameDetails(gameId: number): void {
     this.router.navigate(['/game-catalog', gameId]);
+  }
+
+  toAddGame(): void {
+    this.router.navigate(['/game-catalog/add']);
   }
 
   logout(): void {

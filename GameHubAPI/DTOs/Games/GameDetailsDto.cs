@@ -12,6 +12,8 @@ namespace GameHubAPI.DTOs.Games
 
         public string Description { get; set; } = "";
 
+        public bool HasDedicatedServers { get; set; }
+
         public GameGenre Genre { get; set; }
 
         public DateTime? UpdatedAt { get; set; }

@@ -5,6 +5,7 @@ export interface Game {
   title: string;
   releaseDate: string;
   description: string;
+  hasDedicatedServers: boolean;
   genre: GameGenre;
   updatedAt: string | null;
 }

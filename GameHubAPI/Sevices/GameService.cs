@@ -100,6 +100,7 @@ namespace GameHubAPI.Sevices
                 Title = game.Title,
                 ReleaseDate = game.ReleaseDate,
                 Description = game.Description,
+                HasDedicatedServers = game.HasDedicatedServers,
                 Genre = game.Genre,
                 UpdatedAt = game.UpdatedAt
             };

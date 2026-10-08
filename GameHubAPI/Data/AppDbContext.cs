@@ -10,5 +10,14 @@ namespace GameHubAPI.Data
         public DbSet<User> Users => Set<User>();
 
         public DbSet<Game> Games => Set<Game>();
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Game>()
+                .Property(g => g.ReleaseDate)
+                .HasColumnType("date");
+        }
     }
 }
