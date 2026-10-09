@@ -19,9 +19,9 @@ namespace GameHubAPI.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GameListItemDto>>> GetGameList()
+        public async Task<ActionResult<IEnumerable<GameListItemDto>>> GetGameList(string? search)
         {
-            var games = await _gameService.GetGameListAsync();
+            var games = await _gameService.GetGameListAsync(search);
 
             return Ok(games);
         }

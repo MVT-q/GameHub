@@ -4,7 +4,15 @@
 
 <button type="button" (click)="toAddGame()">Add game</button>
 
-@for (game of games; track game.id) {
-  <p (click)="toGameDetails(game.id)">{{ game.title }}</p>
-  <button type="button" (click)="deleteGame(game.id)">Delete</button>
+<input type="text" name="search" [(ngModel)]="search">
+<button type="button" (click)="getGameList()">Search</button>
+
+@if(games.length > 0){
+  @for (game of games; track game.id) {
+    <p (click)="toGameDetails(game.id)">{{ game.title }}</p>
+    <button type="button" (click)="deleteGame(game.id)">Delete</button>
+  }
+} @else {
+  <p>No games found</p>
 }
+

@@ -3,15 +3,20 @@ import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { Game } from '../../models/game/game.model';
 import { GameService } from '../../services/game.service';
+import { FormsModule } from '@angular/forms';
+import { GameQuery } from '../../models/game/game-query.model';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-game-catalog',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './game-catalog.html',
   styleUrl: './game-catalog.css',
 })
 export class GameCatalog implements OnInit {
   games: Game[] = [];
+
+  search = '';
 
   constructor(
     private readonly authService: AuthService,
@@ -24,7 +29,11 @@ export class GameCatalog implements OnInit {
   }
 
   getGameList(): void {
-    this.gameService.getGameList().subscribe({
+    let query: GameQuery = {
+      search: this.search,
+    };
+
+    this.gameService.getGameList(query).subscribe({
       next: (games) => {
         this.games = games;
       },

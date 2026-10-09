@@ -1,9 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Game } from '../models/game/game.model';
 import { CreateGame } from '../models/game/game-create.model';
 import { UpdateGameInfo } from '../models/game/update-game-info.model';
+import { GameQuery } from '../models/game/game-query.model';
 
 @Injectable({
   providedIn: 'root',
@@ -13,8 +14,14 @@ export class GameService {
 
   constructor(private readonly http: HttpClient) {}
 
-  getGameList(): Observable<Game[]> {
-    return this.http.get<Game[]>(this.apiUrl);
+  getGameList(query: GameQuery): Observable<Game[]> {
+    let params = new HttpParams();
+
+    if (query.search) {
+      params = params.set('search', query.search);
+    }
+
+    return this.http.get<Game[]>(this.apiUrl, { params });
   }
 
   getGameById(gameId: number): Observable<Game> {

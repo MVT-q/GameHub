@@ -14,11 +14,20 @@ namespace GameHubAPI.Sevices
             _context = context;
         }
 
-        public async Task<List<GameListItemDto>> GetGameListAsync()
+        public async Task<List<GameListItemDto>> GetGameListAsync(string? search)
         {
-            var games = await _context.Games.ToListAsync();
+            IQueryable<Game> query = _context.Games;
 
-            return games.Select(ToGameListDto).ToList();
+            if (!string.IsNullOrWhiteSpace(search))
+                query = query.Where(g => EF.Functions.ILike(g.Title, $"%{search}%"));
+
+            var games = await query.Select(g => new GameListItemDto
+            {
+                Id = g.Id,
+                Title = g.Title
+            }).ToListAsync();
+
+            return games;
         }
 
         public async Task<GameDetailsDto?> GetGameByIdAsync(int gameId)
