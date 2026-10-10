@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { GameQuery } from '../../models/game/game-query.model';
 import { Observable } from 'rxjs';
 import { GameGenre } from '../../enums/game-genre';
+import { GameSortBy } from '../../enums/game-sort-by';
 
 @Component({
   selector: 'app-game-catalog',
@@ -33,6 +34,14 @@ export class GameCatalog implements OnInit {
 
   dedicatedServer: boolean | undefined = undefined;
 
+  sortBy: GameSortBy | undefined;
+  sorts = [
+    { value: GameSortBy.Title, label: 'Sort by game title' },
+    { value: GameSortBy.ReleaseDate, label: 'Sort by release date' },
+  ];
+
+  descending: boolean | undefined;
+
   constructor(
     private readonly authService: AuthService,
     private readonly router: Router,
@@ -48,6 +57,8 @@ export class GameCatalog implements OnInit {
       search: this.search,
       genre: this.gameGenre,
       hasDedicatedServer: this.dedicatedServer,
+      sortBy: this.sortBy,
+      descending: this.descending
     };
 
     this.gameService.getGameList(query).subscribe({

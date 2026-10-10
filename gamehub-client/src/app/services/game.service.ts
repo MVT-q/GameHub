@@ -29,6 +29,14 @@ export class GameService {
       params = params.set('hasDedicatedServer', query.hasDedicatedServer);
     }
 
+    if (query.sortBy !== undefined) {
+      params = params.set('sortBy', query.sortBy);
+    }
+
+    if (query.descending !== undefined) {
+      params = params.set('descending', query.descending);
+    }
+
     return this.http.get<Game[]>(this.apiUrl, { params });
   }
 

@@ -23,6 +23,21 @@
     <option [ngValue]="false">Without dedicated servers</option>
   </select>
 
+  <select id="sortBy" name="sortBy" [(ngModel)]="sortBy">
+    <option [ngValue]="undefined">No sorting</option>
+
+    @for (sort of sorts; track sort.value) {
+      <option [ngValue]="sort.value">
+        {{ sort.label }}
+      </option>
+    }
+  </select>
+
+  <select id="descending" name="descending" [(ngModel)]="descending">
+    <option [ngValue]="undefined">Ascending</option>
+    <option [ngValue]="true">Descending</option>
+  </select>
+
   <button type="submit">Search</button>
 </form>
 

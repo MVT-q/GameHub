@@ -15,7 +15,7 @@ namespace GameHubAPI.Sevices
             _context = context;
         }
 
-        public async Task<List<GameListItemDto>> GetGameListAsync(string? search, GameGenre? genre, bool? hasDedicatedServer)
+        public async Task<List<GameListItemDto>> GetGameListAsync(string? search, GameGenre? genre, bool? hasDedicatedServer, GameSortBy? sortBy, bool descending)
         {
             IQueryable<Game> query = _context.Games;
 
@@ -27,6 +27,23 @@ namespace GameHubAPI.Sevices
 
             if (!string.IsNullOrWhiteSpace(search))
                 query = query.Where(g => EF.Functions.ILike(g.Title, $"%{search}%"));
+
+            switch (sortBy)
+            {
+                case GameSortBy.Title:
+                    if (descending)
+                        query = query.OrderByDescending(g => g.Title);
+                    else
+                        query = query.OrderBy(g => g.Title);
+                    break;
+
+                case GameSortBy.ReleaseDate:
+                    if (descending)
+                        query = query.OrderByDescending(g => g.ReleaseDate);
+                    else
+                        query = query.OrderBy(g => g.ReleaseDate);
+                    break;         
+            }
 
             var games = await query.Select(g => new GameListItemDto
             {
