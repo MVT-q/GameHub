@@ -6,6 +6,7 @@ import { GameService } from '../../services/game.service';
 import { FormsModule } from '@angular/forms';
 import { GameQuery } from '../../models/game/game-query.model';
 import { Observable } from 'rxjs';
+import { GameGenre } from '../../enums/game-genre';
 
 @Component({
   selector: 'app-game-catalog',
@@ -17,6 +18,20 @@ export class GameCatalog implements OnInit {
   games: Game[] = [];
 
   search = '';
+
+  gameGenre: number | undefined = undefined;
+  genres = [
+    { value: GameGenre.Action, label: 'Action' },
+    { value: GameGenre.Adventure, label: 'Adventure' },
+    { value: GameGenre.RPG, label: 'RPG' },
+    { value: GameGenre.Strategy, label: 'Strategy' },
+    { value: GameGenre.Simulation, label: 'Simulation' },
+    { value: GameGenre.Sports, label: 'Sports' },
+    { value: GameGenre.Racing, label: 'Racing' },
+    { value: GameGenre.Horror, label: 'Horror' },
+  ];
+
+  dedicatedServer: boolean | undefined = undefined;
 
   constructor(
     private readonly authService: AuthService,
@@ -31,6 +46,8 @@ export class GameCatalog implements OnInit {
   getGameList(): void {
     let query: GameQuery = {
       search: this.search,
+      genre: this.gameGenre,
+      hasDedicatedServer: this.dedicatedServer,
     };
 
     this.gameService.getGameList(query).subscribe({

@@ -1,5 +1,6 @@
 ﻿using GameHubAPI.Data;
 using GameHubAPI.DTOs.Games;
+using GameHubAPI.Enums;
 using GameHubAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,9 +15,15 @@ namespace GameHubAPI.Sevices
             _context = context;
         }
 
-        public async Task<List<GameListItemDto>> GetGameListAsync(string? search)
+        public async Task<List<GameListItemDto>> GetGameListAsync(string? search, GameGenre? genre, bool? hasDedicatedServer)
         {
             IQueryable<Game> query = _context.Games;
+
+            if(genre != null)
+                query = query.Where(g => g.Genre == genre);
+
+            if (hasDedicatedServer.HasValue)
+                query = query.Where(g => g.HasDedicatedServers == hasDedicatedServer.Value);
 
             if (!string.IsNullOrWhiteSpace(search))
                 query = query.Where(g => EF.Functions.ILike(g.Title, $"%{search}%"));

@@ -21,6 +21,14 @@ export class GameService {
       params = params.set('search', query.search);
     }
 
+    if (query.genre !== undefined) {
+      params = params.set('genre', query.genre);
+    }
+
+    if (query.hasDedicatedServer !== undefined) {
+      params = params.set('hasDedicatedServer', query.hasDedicatedServer);
+    }
+
     return this.http.get<Game[]>(this.apiUrl, { params });
   }
 

@@ -4,10 +4,29 @@
 
 <button type="button" (click)="toAddGame()">Add game</button>
 
-<input type="text" name="search" [(ngModel)]="search">
-<button type="button" (click)="getGameList()">Search</button>
+<form (ngSubmit)="getGameList()">
+  <input type="text" id="search" name="search" [(ngModel)]="search" />
 
-@if(games.length > 0){
+  <select id="genre" name="genre" [(ngModel)]="gameGenre">
+    <option [ngValue]="undefined">All genres</option>
+
+    @for (genre of genres; track genre.value) {
+      <option [ngValue]="genre.value">
+        {{ genre.label }}
+      </option>
+    }
+  </select>
+
+  <select id="dedicatedServers" name="dedicatedServers" [(ngModel)]="dedicatedServer">
+    <option [ngValue]="undefined">All server types</option>
+    <option [ngValue]="true">With dedicated servers</option>
+    <option [ngValue]="false">Without dedicated servers</option>
+  </select>
+
+  <button type="submit">Search</button>
+</form>
+
+@if (games.length > 0) {
   @for (game of games; track game.id) {
     <p (click)="toGameDetails(game.id)">{{ game.title }}</p>
     <button type="button" (click)="deleteGame(game.id)">Delete</button>
@@ -15,4 +34,3 @@
 } @else {
   <p>No games found</p>
 }
-

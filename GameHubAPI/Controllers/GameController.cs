@@ -1,4 +1,5 @@
 ﻿using GameHubAPI.DTOs.Games;
+using GameHubAPI.Enums;
 using GameHubAPI.Models;
 using GameHubAPI.Sevices;
 using Microsoft.AspNetCore.Authorization;
@@ -19,9 +20,9 @@ namespace GameHubAPI.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GameListItemDto>>> GetGameList(string? search)
+        public async Task<ActionResult<IEnumerable<GameListItemDto>>> GetGameList(string? search, GameGenre? genre, bool? hasDedicatedServer)
         {
-            var games = await _gameService.GetGameListAsync(search);
+            var games = await _gameService.GetGameListAsync(search, genre, hasDedicatedServer);
 
             return Ok(games);
         }
