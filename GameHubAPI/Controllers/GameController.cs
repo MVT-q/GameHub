@@ -20,9 +20,9 @@ namespace GameHubAPI.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GameListItemDto>>> GetGameList(string? search, GameGenre? genre, bool? hasDedicatedServer, GameSortBy sortBy, bool descending)
+        public async Task<ActionResult<PagedResult<GameListItemDto>>> GetGameList(string? search, GameGenre? genre, bool? hasDedicatedServer, GameSortBy sortBy, bool descending, int page = 1, int pageSize = 50)
         {
-            var games = await _gameService.GetGameListAsync(search, genre, hasDedicatedServer, sortBy, descending);
+            var games = await _gameService.GetGameListAsync(search, genre, hasDedicatedServer, sortBy, descending, page, pageSize);
 
             return Ok(games);
         }

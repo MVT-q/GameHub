@@ -23,6 +23,8 @@ namespace GameHubAPI.Middleware
                 {
                     UserAlreadyExistsException => StatusCodes.Status409Conflict,
 
+                    InvalidPaginationException => StatusCodes.Status400BadRequest,
+
                     _ => StatusCodes.Status500InternalServerError
                 };
 

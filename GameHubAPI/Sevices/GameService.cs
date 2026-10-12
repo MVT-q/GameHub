@@ -1,6 +1,7 @@
 ﻿using GameHubAPI.Data;
 using GameHubAPI.DTOs.Games;
 using GameHubAPI.Enums;
+using GameHubAPI.Exceptions;
 using GameHubAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,11 +16,17 @@ namespace GameHubAPI.Sevices
             _context = context;
         }
 
-        public async Task<List<GameListItemDto>> GetGameListAsync(string? search, GameGenre? genre, bool? hasDedicatedServer, GameSortBy? sortBy, bool descending)
+        public async Task<PagedResult<GameListItemDto>> GetGameListAsync(string? search, GameGenre? genre, bool? hasDedicatedServer, GameSortBy? sortBy, bool descending, int page, int pageSize)
         {
             IQueryable<Game> query = _context.Games;
 
-            if(genre != null)
+            if (page < 1)
+                throw new InvalidPaginationException("Page must be greater than 0");
+
+            if (pageSize < 1 || pageSize > 50)
+                throw new InvalidPaginationException("Page size must be between 1 and 50");
+
+            if (genre != null)
                 query = query.Where(g => g.Genre == genre);
 
             if (hasDedicatedServer.HasValue)
@@ -45,13 +52,23 @@ namespace GameHubAPI.Sevices
                     break;         
             }
 
+            var totalCount = await query.CountAsync();
+
+            query = query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize);
+
             var games = await query.Select(g => new GameListItemDto
             {
                 Id = g.Id,
                 Title = g.Title
             }).ToListAsync();
 
-            return games;
+            return new PagedResult<GameListItemDto> 
+            {
+                Items = games,
+                TotalCount = totalCount
+            };
         }
 
         public async Task<GameDetailsDto?> GetGameByIdAsync(int gameId)

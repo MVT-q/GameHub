@@ -5,6 +5,7 @@ import { Game } from '../models/game/game.model';
 import { CreateGame } from '../models/game/game-create.model';
 import { UpdateGameInfo } from '../models/game/update-game-info.model';
 import { GameQuery } from '../models/game/game-query.model';
+import { PagedResult } from '../common/paged-result.model';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ export class GameService {
 
   constructor(private readonly http: HttpClient) {}
 
-  getGameList(query: GameQuery): Observable<Game[]> {
+  getGameList(query: GameQuery): Observable<PagedResult<Game>> {
     let params = new HttpParams();
 
     if (query.search) {
@@ -37,7 +38,15 @@ export class GameService {
       params = params.set('descending', query.descending);
     }
 
-    return this.http.get<Game[]>(this.apiUrl, { params });
+    if (query.page !== undefined) {
+      params = params.set('page', query.page);
+    }
+
+    if (query.pageSize !== undefined) {
+      params = params.set('pageSize', query.pageSize);
+    }
+
+    return this.http.get<PagedResult<Game>>(this.apiUrl, { params });
   }
 
   getGameById(gameId: number): Observable<Game> {

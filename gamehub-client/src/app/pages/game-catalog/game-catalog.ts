@@ -42,6 +42,14 @@ export class GameCatalog implements OnInit {
 
   descending: boolean | undefined;
 
+  currentPage = 1;
+  pageSize = 2;
+  totalCount = 0;
+
+  get totalPages(): number {
+    return Math.ceil(this.totalCount / this.pageSize);
+  }
+
   constructor(
     private readonly authService: AuthService,
     private readonly router: Router,
@@ -58,12 +66,22 @@ export class GameCatalog implements OnInit {
       genre: this.gameGenre,
       hasDedicatedServer: this.dedicatedServer,
       sortBy: this.sortBy,
-      descending: this.descending
+      descending: this.descending,
+      page: this.currentPage,
+      pageSize: this.pageSize,
     };
 
     this.gameService.getGameList(query).subscribe({
       next: (games) => {
-        this.games = games;
+        if (games.items.length === 0 && this.currentPage > 1) {
+          this.currentPage--;
+
+          this.getGameList();
+          return;
+        }
+
+        this.games = games.items;
+        this.totalCount = games.totalCount;
       },
       error: (error) => {
         console.error(error);
@@ -74,12 +92,30 @@ export class GameCatalog implements OnInit {
   deleteGame(gameId: number): void {
     this.gameService.deleteGame(gameId).subscribe({
       next: () => {
-        this.games = this.games.filter((game) => game.id !== gameId);
+        this.getGameList();
       },
       error: (error) => {
         console.error(error);
       },
     });
+  }
+
+  nextPage(): void {
+    if (this.currentPage >= this.totalPages) {
+      return;
+    }
+
+    this.currentPage++;
+    this.getGameList();
+  }
+
+  previousPage(): void {
+    if (this.currentPage === 1) {
+      return;
+    }
+
+    this.currentPage--;
+    this.getGameList();
   }
 
   toGameDetails(gameId: number): void {

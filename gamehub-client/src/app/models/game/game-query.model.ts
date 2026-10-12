@@ -7,4 +7,6 @@ export interface GameQuery {
   hasDedicatedServer?: boolean;
   sortBy?: GameSortBy;
   descending?: boolean;
+  page?: number;
+  pageSize?: number;
 }

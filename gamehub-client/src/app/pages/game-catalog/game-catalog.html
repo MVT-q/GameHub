@@ -49,3 +49,11 @@
 } @else {
   <p>No games found</p>
 }
+
+<br />
+
+<button type="button" [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
+
+<span>Page {{ currentPage }} of {{ totalPages }}</span>
+
+<button type="button" [disabled]="currentPage >= totalPages" (click)="nextPage()">Next</button>
