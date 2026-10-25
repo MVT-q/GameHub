@@ -12,6 +12,8 @@ namespace GameHubAPI.Models
 
         public UserRole Role { get; set; } = UserRole.User;
 
+        public ICollection<GameLibraryEntry> GameLibraryEntries { get; set; } = [];
+
         public void SetPasswordHash(string passwordHash)
         {
             PasswordHash = passwordHash;

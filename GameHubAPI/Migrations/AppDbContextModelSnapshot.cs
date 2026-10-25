@@ -58,6 +58,67 @@ namespace GameHubAPI.Migrations
                     b.ToTable("Games");
                 });
 
+            modelBuilder.Entity("GameHubAPI.Models.GameLibraryEntry", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("integer");
+
+                    b.Property<float?>("Rating")
+                        .HasColumnType("real");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameId");
+
+                    b.HasIndex("UserId", "GameId")
+                        .IsUnique();
+
+                    b.ToTable("GameLibraryEntries");
+                });
+
+            modelBuilder.Entity("GameHubAPI.Models.GameLibraryNote", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<int>("GameLibraryEntryId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameLibraryEntryId");
+
+                    b.ToTable("gameLibraryNotes");
+                });
+
             modelBuilder.Entity("GameHubAPI.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -80,6 +141,51 @@ namespace GameHubAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("GameHubAPI.Models.GameLibraryEntry", b =>
+                {
+                    b.HasOne("GameHubAPI.Models.Game", "Game")
+                        .WithMany("GameLibraryEntries")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GameHubAPI.Models.User", "User")
+                        .WithMany("GameLibraryEntries")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Game");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("GameHubAPI.Models.GameLibraryNote", b =>
+                {
+                    b.HasOne("GameHubAPI.Models.GameLibraryEntry", "GameLibraryEntry")
+                        .WithMany("Notes")
+                        .HasForeignKey("GameLibraryEntryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("GameLibraryEntry");
+                });
+
+            modelBuilder.Entity("GameHubAPI.Models.Game", b =>
+                {
+                    b.Navigation("GameLibraryEntries");
+                });
+
+            modelBuilder.Entity("GameHubAPI.Models.GameLibraryEntry", b =>
+                {
+                    b.Navigation("Notes");
+                });
+
+            modelBuilder.Entity("GameHubAPI.Models.User", b =>
+                {
+                    b.Navigation("GameLibraryEntries");
                 });
 #pragma warning restore 612, 618
         }
