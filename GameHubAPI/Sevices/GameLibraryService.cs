@@ -44,7 +44,40 @@ namespace GameHubAPI.Sevices
             {
                 Id = game.Id,
                 GameId = dto.GameId,
-                Title = game.Game.Title
+                Title = catalogGame.Title
+            };
+        }
+
+        public async Task<GameLibraryEntryDetailsDto> GetGameEntryByIdAsync(int entryId, int currentUserId)
+        {
+            var entry = await _context.GameLibraryEntries
+                .Include(e => e.Game)
+                .Include(e => e.Notes)
+                .FirstOrDefaultAsync(e => e.Id == entryId && e.UserId == currentUserId);
+
+            if (entry is null)
+                throw new GameNotFoundException("Game was not found");
+
+            return ToGameLibraryEntryDetailsDto(entry);
+        }
+
+        private static GameLibraryEntryDetailsDto ToGameLibraryEntryDetailsDto(GameLibraryEntry entry)
+        {
+            return new GameLibraryEntryDetailsDto
+            {
+                Id = entry.Id,
+                GameId = entry.GameId,
+                Title = entry.Game.Title,
+                Genre = entry.Game.Genre,
+                Status = entry.Status,
+                Rating = entry.Rating,
+                AddedAt = entry.AddedAt,
+                Notes = entry.Notes.Select(n => new GameLibraryNoteDto
+                {
+                    Id = n.Id,
+                    Title = n.Title,
+                    Description = n.Description
+                }).ToList()
             };
         }
     }

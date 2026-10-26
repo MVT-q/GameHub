@@ -13,7 +13,7 @@ namespace GameHubAPI.Data
 
         public DbSet<GameLibraryEntry> GameLibraryEntries => Set<GameLibraryEntry>();
 
-        public DbSet<GameLibraryNote> GameLibraryNotes => Set<GameLibraryNote>();
+        public DbSet<GameLibraryNote> gameLibraryNotes => Set<GameLibraryNote>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -21,9 +21,20 @@ namespace GameHubAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<GameLibraryEntryDto>> AddGameToLibrary(AddGameToLibraryDto dto)
         {
-            var game = await _gameLibraryService.AddGameToLibraryAsync(CurrentUserId, dto);
+            var entry = await _gameLibraryService.AddGameToLibraryAsync(CurrentUserId, dto);
 
-            return StatusCode(StatusCodes.Status201Created, game);
+            return CreatedAtAction(
+                nameof(GetGameEntryById),
+                new { entryId = entry.Id },
+                entry);
+        }
+
+        [HttpGet("{entryId:int}")]
+        public async Task<ActionResult<GameLibraryEntryDetailsDto>> GetGameEntryById(int entryId)
+        {
+            var entry = await _gameLibraryService.GetGameEntryByIdAsync(entryId, CurrentUserId);
+
+            return Ok(entry);
         }
     }
 }
