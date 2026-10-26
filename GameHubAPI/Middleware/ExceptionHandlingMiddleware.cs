@@ -22,8 +22,12 @@ namespace GameHubAPI.Middleware
                 var statusCode = e switch
                 {
                     UserAlreadyExistsException => StatusCodes.Status409Conflict,
+                    GameAlreadyInLibraryException => StatusCodes.Status409Conflict,
 
-                    InvalidPaginationException => StatusCodes.Status400BadRequest,
+                    InvalidPaginationException => StatusCodes.Status400BadRequest,            
+
+                    CurrentUserNotFoundException => StatusCodes.Status404NotFound,
+                    GameNotFoundException => StatusCodes.Status404NotFound,
 
                     _ => StatusCodes.Status500InternalServerError
                 };
