@@ -47,5 +47,21 @@ namespace GameHubAPI.Controllers
 
             return NoContent();
         }
+
+        [HttpPatch("{entryId:int}/status")]
+        public async Task<ActionResult<GameLibraryEntryDetailsDto>> UpdateGameStatus(int entryId, UpdateGameStatusDto dto)
+        {
+            var entry = await _gameLibraryService.UpdateGameStatusAsync(entryId, CurrentUserId, dto);
+
+            return Ok(entry);
+        }
+
+        [HttpPatch("{entryId:int}/rating")]
+        public async Task<ActionResult<GameLibraryEntryDetailsDto>> UpdateGameRating(int entryId, UpdateGameRatingDto dto)
+        {
+            var entry = await _gameLibraryService.UpdateGameRatingAsync(entryId, CurrentUserId, dto);
+
+            return Ok(entry);
+        }
     }
 }

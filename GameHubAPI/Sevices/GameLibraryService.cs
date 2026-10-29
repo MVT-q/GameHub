@@ -75,6 +75,54 @@ namespace GameHubAPI.Sevices
             return true;
         }
 
+        public async Task<GameLibraryEntryDetailsDto> UpdateGameStatusAsync(int entryId, int currentUserId, UpdateGameStatusDto dto)
+        {
+            var entry = await _context.GameLibraryEntries
+                .Include(e => e.Game)
+                .Include(e => e.Notes)
+                .FirstOrDefaultAsync(e => e.Id == entryId && e.UserId == currentUserId);
+
+            if (entry is null)
+                throw new GameNotFoundException("Game was not found");
+
+            if (!Enum.IsDefined(dto.Status))
+                throw new InvalidGameStatusException("Invalid game status");
+
+            entry.Status = dto.Status;
+
+            await _context.SaveChangesAsync();
+
+            return ToGameLibraryEntryDetailsDto(entry);
+        }
+
+        public async Task<GameLibraryEntryDetailsDto> UpdateGameRatingAsync(int entryId, int currentUserId, UpdateGameRatingDto dto)
+        {
+            var entry = await _context.GameLibraryEntries
+                .Include(e => e.Game)
+                .Include(e => e.Notes)
+                .FirstOrDefaultAsync(e => e.Id == entryId && e.UserId == currentUserId);
+
+            if (entry is null)
+                throw new GameNotFoundException("Game was not found");
+
+            if (dto.Rating.HasValue)
+            {
+                var rating = dto.Rating.Value;
+
+                if (rating < 0 || rating > 10)
+                    throw new InvalidGameRatingException("Rating must be between 0 and 10");
+
+                if (MathF.Abs(rating * 2 - MathF.Round(rating * 2)) > 0.0001f)
+                    throw new InvalidGameRatingException("Rating must use increments of 0.5");
+            }
+
+            entry.Rating = dto.Rating;
+
+            await _context.SaveChangesAsync();
+
+            return ToGameLibraryEntryDetailsDto(entry);
+        }
+
         private static GameLibraryEntryDetailsDto ToGameLibraryEntryDetailsDto(GameLibraryEntry entry)
         {
             return new GameLibraryEntryDetailsDto

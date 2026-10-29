@@ -24,7 +24,9 @@ namespace GameHubAPI.Middleware
                     UserAlreadyExistsException => StatusCodes.Status409Conflict,
                     GameAlreadyInLibraryException => StatusCodes.Status409Conflict,
 
-                    InvalidPaginationException => StatusCodes.Status400BadRequest,            
+                    InvalidPaginationException => StatusCodes.Status400BadRequest,
+                    InvalidGameStatusException => StatusCodes.Status400BadRequest,
+                    InvalidGameRatingException => StatusCodes.Status400BadRequest,
 
                     CurrentUserNotFoundException => StatusCodes.Status404NotFound,
                     GameNotFoundException => StatusCodes.Status404NotFound,
