@@ -36,5 +36,16 @@ namespace GameHubAPI.Controllers
 
             return Ok(entry);
         }
+
+        [HttpDelete("{entryId:int}")]
+        public async Task<IActionResult> DeleteGameEntry(int entryId)
+        {
+            var result = await _gameLibraryService.DeleteGameEntryAsync(entryId, CurrentUserId);
+
+            if (!result)
+                return NotFound();
+
+            return NoContent();
+        }
     }
 }

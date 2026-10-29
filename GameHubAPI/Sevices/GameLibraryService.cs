@@ -61,6 +61,20 @@ namespace GameHubAPI.Sevices
             return ToGameLibraryEntryDetailsDto(entry);
         }
 
+        public async Task<bool> DeleteGameEntryAsync(int entryId, int currentUserId)
+        {
+            var entry = await _context.GameLibraryEntries.FirstOrDefaultAsync(e => e.Id == entryId && e.UserId == currentUserId);
+
+            if(entry is null)
+                return false;
+
+            _context.GameLibraryEntries.Remove(entry);
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
         private static GameLibraryEntryDetailsDto ToGameLibraryEntryDetailsDto(GameLibraryEntry entry)
         {
             return new GameLibraryEntryDetailsDto
