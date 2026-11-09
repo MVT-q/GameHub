@@ -30,6 +30,7 @@ namespace GameHubAPI.Middleware
 
                     CurrentUserNotFoundException => StatusCodes.Status404NotFound,
                     GameNotFoundException => StatusCodes.Status404NotFound,
+                    NoteNotFoundException => StatusCodes.Status404NotFound,
 
                     _ => StatusCodes.Status500InternalServerError
                 };

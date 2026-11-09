@@ -84,6 +84,8 @@ namespace GameHubAPI
 
             builder.Services.AddScoped<GameLibraryService>();
 
+            builder.Services.AddScoped<GameLibraryNoteService>();
+
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())

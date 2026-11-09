@@ -16,8 +16,6 @@ namespace GameHubAPI.DTOs.Games
 
         public float? Rating { get; set; }
 
-        public ICollection<GameLibraryNoteDto> Notes { get; set; } = [];
-
         public DateTime AddedAt { get; set; }
     }
 }

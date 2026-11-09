@@ -23,7 +23,7 @@ namespace GameHubAPI.Sevices
             if (catalogGame is null)
                 throw new GameNotFoundException("Game was not found");
 
-            var alreadyAdded = await _context.GameLibraryEntries.AnyAsync(gle => gle.GameId == dto.GameId && gle.UserId == currentUserId);
+            var alreadyAdded = await _context.GameLibraryEntries.AnyAsync(e => e.GameId == dto.GameId && e.UserId == currentUserId);
 
             if (alreadyAdded)
                 throw new GameAlreadyInLibraryException("Game is already in your library");
@@ -52,7 +52,6 @@ namespace GameHubAPI.Sevices
         {
             var entry = await _context.GameLibraryEntries
                 .Include(e => e.Game)
-                .Include(e => e.Notes)
                 .FirstOrDefaultAsync(e => e.Id == entryId && e.UserId == currentUserId);
 
             if (entry is null)
@@ -79,7 +78,6 @@ namespace GameHubAPI.Sevices
         {
             var entry = await _context.GameLibraryEntries
                 .Include(e => e.Game)
-                .Include(e => e.Notes)
                 .FirstOrDefaultAsync(e => e.Id == entryId && e.UserId == currentUserId);
 
             if (entry is null)
@@ -99,7 +97,6 @@ namespace GameHubAPI.Sevices
         {
             var entry = await _context.GameLibraryEntries
                 .Include(e => e.Game)
-                .Include(e => e.Notes)
                 .FirstOrDefaultAsync(e => e.Id == entryId && e.UserId == currentUserId);
 
             if (entry is null)
@@ -134,12 +131,6 @@ namespace GameHubAPI.Sevices
                 Status = entry.Status,
                 Rating = entry.Rating,
                 AddedAt = entry.AddedAt,
-                Notes = entry.Notes.Select(n => new GameLibraryNoteDto
-                {
-                    Id = n.Id,
-                    Title = n.Title,
-                    Description = n.Description
-                }).ToList()
             };
         }
     }
