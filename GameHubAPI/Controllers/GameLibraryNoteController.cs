@@ -48,5 +48,21 @@ namespace GameHubAPI.Controllers
                 },
                 note);
         }
+
+        [HttpDelete("{noteId:int}")]
+        public async Task<IActionResult> DeleteNote(int entryId, int noteId)
+        {
+            await _gameLibraryNoteService.DeleteNoteAsync(entryId, noteId, CurrentUserId);
+
+            return NoContent();
+        }
+
+        [HttpPut("{noteId:int}")]
+        public async Task<IActionResult> UpdateNote(int entryId, int noteId, UpdateGameLibraryNoteDto dto)
+        {
+            var note = await _gameLibraryNoteService.UpdateNoteAsync(entryId, noteId, CurrentUserId, dto);
+
+            return Ok(note);
+        }
     }
 }

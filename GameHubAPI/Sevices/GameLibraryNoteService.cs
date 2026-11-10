@@ -96,6 +96,43 @@ namespace GameHubAPI.Sevices
             return ToGameLibraryNoteDto(note);
         }
 
+        public async Task DeleteNoteAsync(int entryId, int noteId, int currentUserId)
+        {
+            var entry = await _context.GameLibraryEntries.FirstOrDefaultAsync(e => e.Id == entryId && e.UserId == currentUserId);
+
+            if (entry is null)
+                throw new GameNotFoundException("Game was not found");
+
+            var note = await _context.gameLibraryNotes.FirstOrDefaultAsync(n => n.Id == noteId && n.GameLibraryEntryId == entryId);
+
+            if (note is null)
+                throw new NoteNotFoundException("Note was not found");
+
+            _context.gameLibraryNotes.Remove(note);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<GameLibraryNoteDto> UpdateNoteAsync(int entryId, int noteId, int currentUserId, UpdateGameLibraryNoteDto dto)
+        {
+            var entry = await _context.GameLibraryEntries.FirstOrDefaultAsync(e => e.Id == entryId && e.UserId == currentUserId);
+
+            if (entry is null)
+                throw new GameNotFoundException("Game was not found");
+
+            var note = await _context.gameLibraryNotes.FirstOrDefaultAsync(n => n.Id == noteId && n.GameLibraryEntryId == entryId);
+
+            if (note is null)
+                throw new NoteNotFoundException("Note was not found");
+
+            note.Title = dto.Title;
+            note.Description = dto.Description;
+
+            await _context.SaveChangesAsync();
+
+            return ToGameLibraryNoteDto(note);
+        }
+
         private static GameLibraryNoteDto ToGameLibraryNoteDto(GameLibraryNote note)
         {
             return new GameLibraryNoteDto
