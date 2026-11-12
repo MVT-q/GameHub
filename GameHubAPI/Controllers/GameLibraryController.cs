@@ -1,4 +1,5 @@
 ﻿using GameHubAPI.DTOs.Games;
+using GameHubAPI.Enums;
 using GameHubAPI.Sevices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -33,6 +34,14 @@ namespace GameHubAPI.Controllers
         public async Task<ActionResult<GameLibraryEntryDetailsDto>> GetGameEntryById(int entryId)
         {
             var entry = await _gameLibraryService.GetGameEntryByIdAsync(entryId, CurrentUserId);
+
+            return Ok(entry);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<GameLibraryEntryDetailsDto>> GetLibraryEntries(string? search, GameGenre? genre, GameProgressStatus? status, bool? sortByRating, int page = 1, int pageSize = 50)
+        {
+            var entry = await _gameLibraryService.GetLibraryEntriesAsync(CurrentUserId, search, genre, status, sortByRating, page, pageSize);
 
             return Ok(entry);
         }

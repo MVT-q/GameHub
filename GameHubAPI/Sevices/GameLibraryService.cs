@@ -60,6 +60,63 @@ namespace GameHubAPI.Sevices
             return ToGameLibraryEntryDetailsDto(entry);
         }
 
+        public async Task<PagedResult<GameLibraryEntryDto>> GetLibraryEntriesAsync(int currentUserId, string? search, GameGenre? genre, GameProgressStatus? status, bool? sortByRating, int page, int pageSize)
+        {
+            IQueryable<GameLibraryEntry> query = _context.GameLibraryEntries.Where(e => e.UserId == currentUserId);
+
+            if (page < 1)
+                throw new InvalidPaginationException("Page must be greater than 0");
+
+            if (pageSize < 1 || pageSize > 50)
+                throw new InvalidPaginationException("Page size must be between 1 and 50");
+
+            if (genre.HasValue)
+                query = query.Where(e => e.Game.Genre == genre);
+
+            if (status.HasValue)
+                query = query.Where(e => e.Status == status);
+
+            if (!string.IsNullOrWhiteSpace(search))
+                query = query.Where(e => EF.Functions.ILike(e.Game.Title, $"%{search}%"));
+
+            if (sortByRating.HasValue)
+            {
+                query = sortByRating.Value
+                    ? query.OrderBy(e => e.Rating == null)
+                           .ThenByDescending(e => e.Rating)
+                           .ThenByDescending(e => e.Id)
+                    : query.OrderBy(e => e.Rating == null)
+                           .ThenBy(e => e.Rating)
+                           .ThenByDescending(e => e.Id);
+            }
+            else
+            {
+                query = query.OrderByDescending(e => e.AddedAt)
+                             .ThenByDescending(e => e.Id);
+            }
+
+            var totalCount = await query.CountAsync();
+
+            query = query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize);
+
+            var entries = await query.Select(e => new GameLibraryEntryDto
+            {
+                Id = e.Id,
+                GameId = e.GameId,
+                Title = e.Game.Title,
+                Rating = e.Rating,
+                AddedAt = e.AddedAt
+            }).ToListAsync();
+
+            return new PagedResult<GameLibraryEntryDto>
+            {
+                Items = entries,
+                TotalCount = totalCount
+            };
+        }
+
         public async Task<bool> DeleteGameEntryAsync(int entryId, int currentUserId)
         {
             var entry = await _context.GameLibraryEntries.FirstOrDefaultAsync(e => e.Id == entryId && e.UserId == currentUserId);

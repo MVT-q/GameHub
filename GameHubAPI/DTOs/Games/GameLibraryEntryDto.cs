@@ -7,5 +7,9 @@
         public int GameId { get; set; }
 
         public string Title { get; set; } = "";
+
+        public float? Rating { get; set; }
+
+        public DateTime AddedAt { get; set; }
     }
 }
