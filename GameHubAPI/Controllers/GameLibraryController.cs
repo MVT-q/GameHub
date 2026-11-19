@@ -1,5 +1,6 @@
-﻿using GameHubAPI.DTOs.Games;
+﻿using GameHubAPI.DTOs.Games.Library;
 using GameHubAPI.Enums;
+using GameHubAPI.Models;
 using GameHubAPI.Sevices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -39,7 +40,7 @@ namespace GameHubAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<GameLibraryEntryDetailsDto>> GetLibraryEntries(string? search, GameGenre? genre, GameProgressStatus? status, bool? sortByRating, int page = 1, int pageSize = 50)
+        public async Task<ActionResult<PagedResult<GameLibraryEntryDetailsDto>>> GetLibraryEntries(string? search, GameGenre? genre, GameProgressStatus? status, bool? sortByRating, int page = 1, int pageSize = 50)
         {
             var entry = await _gameLibraryService.GetLibraryEntriesAsync(CurrentUserId, search, genre, status, sortByRating, page, pageSize);
 
@@ -49,10 +50,7 @@ namespace GameHubAPI.Controllers
         [HttpDelete("{entryId:int}")]
         public async Task<IActionResult> DeleteGameEntry(int entryId)
         {
-            var result = await _gameLibraryService.DeleteGameEntryAsync(entryId, CurrentUserId);
-
-            if (!result)
-                return NotFound();
+            await _gameLibraryService.DeleteGameEntryAsync(entryId, CurrentUserId);
 
             return NoContent();
         }

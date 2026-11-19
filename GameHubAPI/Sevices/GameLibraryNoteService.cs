@@ -1,5 +1,5 @@
 ﻿using GameHubAPI.Data;
-using GameHubAPI.DTOs.Games;
+using GameHubAPI.DTOs.Games.Library;
 using GameHubAPI.Enums;
 using GameHubAPI.Exceptions;
 using GameHubAPI.Models;
@@ -18,25 +18,16 @@ namespace GameHubAPI.Sevices
 
         public async Task<GameLibraryNoteDto> GetNoteByIdAsync(int entryId, int noteId, int currentUserId)
         {
-            var entry = await _context.GameLibraryEntries.FirstOrDefaultAsync(e => e.Id == entryId && e.UserId == currentUserId);
+            var entry = await GetEntryAsync(entryId, currentUserId);
 
-            if (entry is null)
-                throw new GameNotFoundException("Game was not found");
-
-            var note = await _context.gameLibraryNotes.FirstOrDefaultAsync(n => n.Id == noteId && n.GameLibraryEntryId == entryId);
-
-            if (note is null)
-                throw new NoteNotFoundException("Note was not found");
+            var note = await GetNoteAsync(entryId, noteId);
 
             return ToGameLibraryNoteDto(note);
         }
 
         public async Task<PagedResult<GameLibraryNoteDto>> GetNotesAsync(int entryId, int currentUserId, string? search, bool descending, int page, int pageSize)
         {
-            var entry = await _context.GameLibraryEntries.FirstOrDefaultAsync(e => e.Id == entryId && e.UserId == currentUserId);
-
-            if (entry is null)
-                throw new GameNotFoundException("Game was not found");
+            await GetEntryAsync(entryId, currentUserId);
 
             IQueryable<GameLibraryNote> query = _context.gameLibraryNotes.Where(n => n.GameLibraryEntryId == entryId);
 
@@ -76,10 +67,7 @@ namespace GameHubAPI.Sevices
 
         public async Task<GameLibraryNoteDto> CreateNoteAsync(int entryId, int currentUserId, CreateGameLibraryNoteDto dto)
         {
-            var entry = await _context.GameLibraryEntries.FirstOrDefaultAsync(e => e.Id == entryId && e.UserId == currentUserId);
-
-            if (entry is null)
-                throw new GameNotFoundException("Game was not found");
+            var entry = await GetEntryAsync(entryId, currentUserId);
 
             var note = new GameLibraryNote
             {
@@ -98,15 +86,9 @@ namespace GameHubAPI.Sevices
 
         public async Task DeleteNoteAsync(int entryId, int noteId, int currentUserId)
         {
-            var entry = await _context.GameLibraryEntries.FirstOrDefaultAsync(e => e.Id == entryId && e.UserId == currentUserId);
+            var entry = await GetEntryAsync(entryId, currentUserId);
 
-            if (entry is null)
-                throw new GameNotFoundException("Game was not found");
-
-            var note = await _context.gameLibraryNotes.FirstOrDefaultAsync(n => n.Id == noteId && n.GameLibraryEntryId == entryId);
-
-            if (note is null)
-                throw new NoteNotFoundException("Note was not found");
+            var note = await GetNoteAsync(entryId, noteId);
 
             _context.gameLibraryNotes.Remove(note);
 
@@ -115,15 +97,9 @@ namespace GameHubAPI.Sevices
 
         public async Task<GameLibraryNoteDto> UpdateNoteAsync(int entryId, int noteId, int currentUserId, UpdateGameLibraryNoteDto dto)
         {
-            var entry = await _context.GameLibraryEntries.FirstOrDefaultAsync(e => e.Id == entryId && e.UserId == currentUserId);
+            var entry = await GetEntryAsync(entryId, currentUserId);
 
-            if (entry is null)
-                throw new GameNotFoundException("Game was not found");
-
-            var note = await _context.gameLibraryNotes.FirstOrDefaultAsync(n => n.Id == noteId && n.GameLibraryEntryId == entryId);
-
-            if (note is null)
-                throw new NoteNotFoundException("Note was not found");
+            var note = await GetNoteAsync(entryId, noteId);
 
             note.Title = dto.Title;
             note.Description = dto.Description;
@@ -142,6 +118,27 @@ namespace GameHubAPI.Sevices
                 Description = note.Description,
                 CreatedAt= note.CreatedAt
             };
+        }
+
+        private async Task<GameLibraryEntry> GetEntryAsync(int entryId, int currentUserId)
+        {
+            var entry = await _context.GameLibraryEntries.FirstOrDefaultAsync(e => e.Id == entryId && e.UserId == currentUserId);
+
+            if (entry is null)
+                throw new GameLibraryEntryNotFoundException("Game was not found");
+
+            return entry;
+        }
+
+        private async Task<GameLibraryNote> GetNoteAsync(int entryId, int noteId)
+        {
+            var note = await _context.gameLibraryNotes
+                .FirstOrDefaultAsync(n => n.Id == noteId && n.GameLibraryEntryId == entryId);
+
+            if (note is null)
+                throw new NoteNotFoundException("Note was not found");
+
+            return note;
         }
     }
 }

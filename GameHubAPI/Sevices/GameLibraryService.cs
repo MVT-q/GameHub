@@ -1,5 +1,5 @@
 ﻿using GameHubAPI.Data;
-using GameHubAPI.DTOs.Games;
+using GameHubAPI.DTOs.Games.Library;
 using GameHubAPI.Enums;
 using GameHubAPI.Exceptions;
 using GameHubAPI.Models;
@@ -55,7 +55,7 @@ namespace GameHubAPI.Sevices
                 .FirstOrDefaultAsync(e => e.Id == entryId && e.UserId == currentUserId);
 
             if (entry is null)
-                throw new GameNotFoundException("Game was not found");
+                throw new GameLibraryEntryNotFoundException("Game was not found");
 
             return ToGameLibraryEntryDetailsDto(entry);
         }
@@ -78,6 +78,12 @@ namespace GameHubAPI.Sevices
 
             if (!string.IsNullOrWhiteSpace(search))
                 query = query.Where(e => EF.Functions.ILike(e.Game.Title, $"%{search}%"));
+
+            if (genre.HasValue && !Enum.IsDefined(genre.Value))
+                throw new InvalidGameGenreException("Invalid game genre");
+
+            if (status.HasValue && !Enum.IsDefined(status.Value))
+                throw new InvalidGameStatusException("Invalid game status");
 
             if (sortByRating.HasValue)
             {
@@ -117,18 +123,16 @@ namespace GameHubAPI.Sevices
             };
         }
 
-        public async Task<bool> DeleteGameEntryAsync(int entryId, int currentUserId)
+        public async Task DeleteGameEntryAsync(int entryId, int currentUserId)
         {
             var entry = await _context.GameLibraryEntries.FirstOrDefaultAsync(e => e.Id == entryId && e.UserId == currentUserId);
 
-            if(entry is null)
-                return false;
+            if (entry is null)
+                throw new GameLibraryEntryNotFoundException("Game was not found");
 
             _context.GameLibraryEntries.Remove(entry);
 
             await _context.SaveChangesAsync();
-
-            return true;
         }
 
         public async Task<GameLibraryEntryDetailsDto> UpdateGameStatusAsync(int entryId, int currentUserId, UpdateGameStatusDto dto)
@@ -138,7 +142,7 @@ namespace GameHubAPI.Sevices
                 .FirstOrDefaultAsync(e => e.Id == entryId && e.UserId == currentUserId);
 
             if (entry is null)
-                throw new GameNotFoundException("Game was not found");
+                throw new GameLibraryEntryNotFoundException("Game was not found");
 
             if (!Enum.IsDefined(dto.Status))
                 throw new InvalidGameStatusException("Invalid game status");
@@ -157,7 +161,7 @@ namespace GameHubAPI.Sevices
                 .FirstOrDefaultAsync(e => e.Id == entryId && e.UserId == currentUserId);
 
             if (entry is null)
-                throw new GameNotFoundException("Game was not found");
+                throw new GameLibraryEntryNotFoundException("Game was not found");
 
             if (dto.Rating.HasValue)
             {

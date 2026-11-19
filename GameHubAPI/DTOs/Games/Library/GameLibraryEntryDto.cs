@@ -1,18 +1,12 @@
-﻿using GameHubAPI.Enums;
-
-namespace GameHubAPI.DTOs.Games
+﻿namespace GameHubAPI.DTOs.Games.Library
 {
-    public class GameLibraryEntryDetailsDto
+    public class GameLibraryEntryDto
     {
         public int Id { get; set; }
 
         public int GameId { get; set; }
 
         public string Title { get; set; } = "";
-
-        public GameGenre Genre { get; set; }
-
-        public GameProgressStatus Status { get; set; }
 
         public float? Rating { get; set; }
 

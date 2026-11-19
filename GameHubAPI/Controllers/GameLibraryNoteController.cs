@@ -1,4 +1,4 @@
-﻿using GameHubAPI.DTOs.Games;
+﻿using GameHubAPI.DTOs.Games.Library;
 using GameHubAPI.Models;
 using GameHubAPI.Sevices;
 using Microsoft.AspNetCore.Authorization;

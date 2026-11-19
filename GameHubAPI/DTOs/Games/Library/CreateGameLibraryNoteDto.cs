@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GameHubAPI.DTOs.Games
+namespace GameHubAPI.DTOs.Games.Library
 {
-    public class UpdateGameLibraryNoteDto
+    public class CreateGameLibraryNoteDto
     {
         [Required]
         public string Title { get; set; } = "";

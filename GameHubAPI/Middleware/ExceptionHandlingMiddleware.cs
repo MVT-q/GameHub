@@ -28,10 +28,12 @@ namespace GameHubAPI.Middleware
                     InvalidGameStatusException => StatusCodes.Status400BadRequest,
                     InvalidGameRatingException => StatusCodes.Status400BadRequest,
                     InvalidGameSortException => StatusCodes.Status400BadRequest,
+                    InvalidGameGenreException => StatusCodes.Status400BadRequest,
 
                     CurrentUserNotFoundException => StatusCodes.Status404NotFound,
                     GameNotFoundException => StatusCodes.Status404NotFound,
                     NoteNotFoundException => StatusCodes.Status404NotFound,
+                    GameLibraryEntryNotFoundException => StatusCodes.Status404NotFound,
 
                     _ => StatusCodes.Status500InternalServerError
                 };
