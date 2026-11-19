@@ -1,6 +1,6 @@
 ﻿using GameHubAPI.Enums;
 
-namespace GameHubAPI.DTOs.Games
+namespace GameHubAPI.DTOs.Games.Catalog
 {
     public class GameDetailsDto
     {

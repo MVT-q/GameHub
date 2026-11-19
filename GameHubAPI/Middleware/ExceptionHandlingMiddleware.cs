@@ -27,6 +27,7 @@ namespace GameHubAPI.Middleware
                     InvalidPaginationException => StatusCodes.Status400BadRequest,
                     InvalidGameStatusException => StatusCodes.Status400BadRequest,
                     InvalidGameRatingException => StatusCodes.Status400BadRequest,
+                    InvalidGameSortException => StatusCodes.Status400BadRequest,
 
                     CurrentUserNotFoundException => StatusCodes.Status404NotFound,
                     GameNotFoundException => StatusCodes.Status404NotFound,

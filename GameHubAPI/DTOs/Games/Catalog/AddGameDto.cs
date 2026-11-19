@@ -1,9 +1,9 @@
 ﻿using GameHubAPI.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace GameHubAPI.DTOs.Games
+namespace GameHubAPI.DTOs.Games.Catalog
 {
-    public class UpdateGameInfoDto
+    public class AddGameDto
     {
         [Required]
         public string Title { get; set; } = "";

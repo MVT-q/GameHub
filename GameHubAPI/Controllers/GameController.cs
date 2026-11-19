@@ -1,4 +1,4 @@
-﻿using GameHubAPI.DTOs.Games;
+﻿using GameHubAPI.DTOs.Games.Catalog;
 using GameHubAPI.Enums;
 using GameHubAPI.Models;
 using GameHubAPI.Sevices;
@@ -9,6 +9,7 @@ namespace GameHubAPI.Controllers
 {
     [ApiController]
     [Route("api/games")]
+    [Authorize]
     public class GameController : ControllerBase
     {
         private readonly GameService _gameService;
@@ -18,28 +19,22 @@ namespace GameHubAPI.Controllers
             _gameService = gameService;
         }
 
-        [Authorize]
         [HttpGet]
-        public async Task<ActionResult<PagedResult<GameListItemDto>>> GetGameList(string? search, GameGenre? genre, bool? hasDedicatedServer, GameSortBy sortBy, bool descending, int page = 1, int pageSize = 50)
+        public async Task<ActionResult<PagedResult<GameListItemDto>>> GetGameList(string? search, GameGenre? genre, bool? hasDedicatedServer, GameSortBy? sortBy, bool descending, int page = 1, int pageSize = 50)
         {
             var games = await _gameService.GetGameListAsync(search, genre, hasDedicatedServer, sortBy, descending, page, pageSize);
 
             return Ok(games);
         }
 
-        [Authorize]
         [HttpGet("{gameId:int}")]
         public async Task<ActionResult<GameDetailsDto>> GetGameById(int gameId)
         {
             var game = await _gameService.GetGameByIdAsync(gameId);
 
-            if (game == null)
-                return NotFound();
-
             return Ok(game);
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<ActionResult<GameDetailsDto>> AddGame(AddGameDto dto)
         {
@@ -51,26 +46,18 @@ namespace GameHubAPI.Controllers
                 game);
         }
 
-        [Authorize]
         [HttpPut("{gameId:int}")]
         public async Task<ActionResult<GameDetailsDto>> UpdateGameInfo(int gameId, UpdateGameInfoDto dto)
         {
             var game = await _gameService.UpdateGameInfoAsync(gameId, dto);
 
-            if (game == null)
-                return NotFound();
-
             return Ok(game);
         }
 
-        [Authorize]
         [HttpDelete("{gameId:int}")]
         public async Task<IActionResult> DeleteGame(int gameId)
         {
-            var result = await _gameService.DeleteGameAsync(gameId);
-
-            if (result == false)
-                return NotFound();
+            await _gameService.DeleteGameAsync(gameId);
 
             return NoContent();
         }

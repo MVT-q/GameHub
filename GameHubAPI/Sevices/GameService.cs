@@ -1,5 +1,5 @@
 ﻿using GameHubAPI.Data;
-using GameHubAPI.DTOs.Games;
+using GameHubAPI.DTOs.Games.Catalog;
 using GameHubAPI.Enums;
 using GameHubAPI.Exceptions;
 using GameHubAPI.Models;
@@ -35,20 +35,21 @@ namespace GameHubAPI.Sevices
             if (!string.IsNullOrWhiteSpace(search))
                 query = query.Where(g => EF.Functions.ILike(g.Title, $"%{search}%"));
 
+            if (sortBy.HasValue && !Enum.IsDefined(sortBy.Value))
+                throw new InvalidGameSortException("Invalid sort option");
+
             switch (sortBy)
             {
                 case GameSortBy.Title:
-                    if (descending)
-                        query = query.OrderByDescending(g => g.Title);
-                    else
-                        query = query.OrderBy(g => g.Title);
+                    query = descending
+                        ? query.OrderByDescending(g => g.Title).ThenBy(g => g.Id)
+                        : query.OrderBy(g => g.Title).ThenBy(g => g.Id);
                     break;
 
                 case GameSortBy.ReleaseDate:
-                    if (descending)
-                        query = query.OrderByDescending(g => g.ReleaseDate);
-                    else
-                        query = query.OrderBy(g => g.ReleaseDate);
+                    query = descending
+                        ? query.OrderByDescending(g => g.ReleaseDate).ThenBy(g => g.Id)
+                        : query.OrderBy(g => g.ReleaseDate).ThenBy(g => g.Id);
                     break;         
             }
 
@@ -71,12 +72,12 @@ namespace GameHubAPI.Sevices
             };
         }
 
-        public async Task<GameDetailsDto?> GetGameByIdAsync(int gameId)
+        public async Task<GameDetailsDto> GetGameByIdAsync(int gameId)
         {
             var game = await _context.Games.FirstOrDefaultAsync(g => g.Id == gameId);
 
-            if (game == null)
-                return null;
+            if (game is null)
+                throw new GameNotFoundException("Game was not found");
 
             return ToGameDetailsDto(game);
         }
@@ -100,12 +101,12 @@ namespace GameHubAPI.Sevices
             return ToGameDetailsDto(game);
         }
 
-        public async Task<GameDetailsDto?> UpdateGameInfoAsync(int gameId, UpdateGameInfoDto dto)
+        public async Task<GameDetailsDto> UpdateGameInfoAsync(int gameId, UpdateGameInfoDto dto)
         {
             var game = await _context.Games.FirstOrDefaultAsync(g => g.Id == gameId);
 
-            if (game == null)
-                return null;
+            if (game is null)
+                throw new GameNotFoundException("Game was not found");
 
             game.Title = dto.Title;
             game.ReleaseDate = dto.ReleaseDate;
@@ -119,27 +120,16 @@ namespace GameHubAPI.Sevices
             return ToGameDetailsDto(game);
         }
 
-        public async Task<bool> DeleteGameAsync(int gameId)
+        public async Task DeleteGameAsync(int gameId)
         {
             var game = await _context.Games.FirstOrDefaultAsync(g => g.Id == gameId);
 
-            if (game == null)
-                return false;
+            if (game is null)
+                throw new GameNotFoundException("Game was not found");
 
             _context.Games.Remove(game);
 
             await _context.SaveChangesAsync();
-
-            return true;
-        }
-
-        private static GameListItemDto ToGameListDto(Game game)
-        {
-            return new GameListItemDto
-            {
-                Id = game.Id,
-                Title = game.Title
-            };
         }
 
         private static GameDetailsDto ToGameDetailsDto(Game game)

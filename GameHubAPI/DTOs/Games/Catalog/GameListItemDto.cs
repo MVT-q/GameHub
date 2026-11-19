@@ -1,4 +1,4 @@
-﻿namespace GameHubAPI.DTOs.Games
+﻿namespace GameHubAPI.DTOs.Games.Catalog
 {
     public class GameListItemDto
     {
