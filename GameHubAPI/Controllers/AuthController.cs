@@ -40,9 +40,12 @@ namespace GameHubAPI.Controllers
         [HttpGet("me")]
         public IActionResult Me()
         {
-            var user = User.Claims;
-
-            return Ok(user);
+            return Ok(new
+            {
+                Id = User.FindFirstValue(ClaimTypes.NameIdentifier),
+                Username = User.FindFirstValue(ClaimTypes.Name),
+                Role = User.FindFirstValue(ClaimTypes.Role)
+            });
         }
     }
 }
