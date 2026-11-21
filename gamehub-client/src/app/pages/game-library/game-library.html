@@ -1,0 +1,50 @@
+<h1>Library</h1>
+
+<form (ngSubmit)="getLibraryEntries()">
+  <input type="text" id="search" name="search" [(ngModel)]="search" />
+
+  <select id="genre" name="genre" [(ngModel)]="gameGenre">
+    <option [ngValue]="undefined">All genres</option>
+
+    @for (genre of genres; track genre.value) {
+      <option [ngValue]="genre.value">
+        {{ genre.label }}
+      </option>
+    }
+  </select>
+
+  <select id="status" name="status" [(ngModel)]="status">
+    <option [ngValue]="undefined">All statuses</option>
+
+    @for (status of statuses; track status.value) {
+      <option [ngValue]="status.value">
+        {{ status.label }}
+      </option>
+    }
+  </select>
+
+  <select id="sortByRating" name="sortByRating" [(ngModel)]="sortByRating">
+    <option [ngValue]="undefined">Without sorting</option>
+    <option [ngValue]="true">Sort by rating DESC</option>
+    <option [ngValue]="false">Sort by rating ASC</option>
+  </select>
+
+  <button type="submit">Search</button>
+</form>
+
+@if (entries.length > 0) {
+  @for (entry of entries; track entry.id) {
+    <p>{{ entry.title }}</p>
+    <p>{{ entry.rating }}</p>
+  }
+} @else {
+  <p>No games found</p>
+}
+
+<br />
+
+<button type="button" [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
+
+<span>Page {{ currentPage }} of {{ totalPages }}</span>
+
+<button type="button" [disabled]="currentPage >= totalPages" (click)="nextPage()">Next</button>

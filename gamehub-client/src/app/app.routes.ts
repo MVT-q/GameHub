@@ -7,6 +7,7 @@ import { guestGuard } from './guards/guest-guard';
 import { GameDetails } from './pages/game-details/game-details';
 import { AddGame } from './pages/add-game/add-game';
 import { EditGame } from './pages/edit-game/edit-game';
+import { GameLibrary } from './pages/game-library/game-library';
 
 export const routes: Routes = [
   { path: 'register', component: Register, canActivate: [guestGuard] },
@@ -15,5 +16,6 @@ export const routes: Routes = [
   { path: 'game-catalog/add', component: AddGame, canActivate: [authGuard] },
   { path: 'game-catalog/:gameId/edit', component: EditGame, canActivate: [authGuard] },
   { path: 'game-catalog/:gameId', component: GameDetails, canActivate: [authGuard] }, 
+  { path: 'game-library', component: GameLibrary, canActivate: [authGuard] },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
 ];
