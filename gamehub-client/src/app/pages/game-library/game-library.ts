@@ -5,6 +5,7 @@ import { GameGenre } from '../../enums/game-genre';
 import { GameProgressStatus } from '../../enums/game-progress-status';
 import { GameLibraryQuery } from '../../models/game-library/game-library-query.model';
 import { GameLibraryService } from '../../services/game-library.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-game-library',
@@ -48,7 +49,7 @@ export class GameLibrary implements OnInit {
     return Math.ceil(this.totalCount / this.pageSize);
   }
 
-  constructor(private readonly gameLibraryService: GameLibraryService) {}
+  constructor(private readonly gameLibraryService: GameLibraryService, private readonly router: Router) {}
 
   ngOnInit(): void {
     this.getLibraryEntries();
@@ -92,6 +93,10 @@ export class GameLibrary implements OnInit {
         console.error(error);
       },
     });
+  }
+
+  toGameDetails(entryId: number): void {
+    this.router.navigate(['/game-library', entryId])
   }
 
   nextPage(): void {

@@ -1,0 +1,36 @@
+@if (entry) {
+  <h1>{{ entry.title }}</h1>
+
+  <p>{{ getGenreLabel(entry.genre) }}</p>
+
+  <span>{{ getStatusLabel(entry.status) }}</span>
+  <button type="button" (click)="editStatus()">🖍</button>
+
+  @if (isEditingStatus) {
+    <select id="status" name="status" [(ngModel)]="entryStatus">
+      @for (status of statuses; track status.value) {
+        <option [ngValue]="status.value">
+          {{ status.label }}
+        </option>
+      }
+    </select>
+
+    <button type="button" (click)="saveStatus()">Save</button>
+  }
+
+  <br />
+
+  <span>{{ entry.rating ?? 'Not rated' }}</span>
+  <button type="button" (click)="editRating()">🖍</button>
+
+  @if (isEditingRating) {
+    <input type="range" min="0" max="10" step="0.5" [(ngModel)]="entryRating" />
+
+    <span>{{ entryRating ?? 'Not rated' }}</span>
+
+    <button type="button" (click)="saveRating()">Save</button>
+    <button type="button" (click)="resetRating()">Reset rating</button>
+  }
+
+  <p>{{ entry.addedAt }}</p>
+}

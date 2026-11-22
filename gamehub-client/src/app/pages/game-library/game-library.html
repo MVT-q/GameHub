@@ -34,7 +34,7 @@
 
 @if (entries.length > 0) {
   @for (entry of entries; track entry.id) {
-    <p>{{ entry.title }}</p>
+    <p (click)="toGameDetails(entry.id)">{{ entry.title }}</p>
     <p>{{ entry.rating }}</p>
     <button type="button" (click)="deleteGameEntry(entry.id)">Delete</button>
   }

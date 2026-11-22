@@ -5,6 +5,9 @@ import { Observable } from 'rxjs';
 import { PagedResult } from '../common/paged-result.model';
 import { GameLibraryEntry } from '../models/game-library/game-library-entry.model';
 import { AddGameToLibrary } from '../models/game-library/add-game-to-library.model';
+import { GameLibraryEntryDetails } from '../models/game-library/game-library-entry-details.model';
+import { UpdateGameStatus } from '../models/game-library/update-game-status.model';
+import { UpdateGameRating } from '../models/game-library/update-game-rating.model';
 
 @Injectable({
   providedIn: 'root',
@@ -50,5 +53,17 @@ export class GameLibraryService {
 
   isGameInLibrary(gameId: number): Observable<boolean> {
     return this.http.get<boolean>(`${this.apiUrl}/contains/${gameId}`);
+  }
+
+  getGameEntryById(entryId: number): Observable<GameLibraryEntryDetails> {
+    return this.http.get<GameLibraryEntryDetails>(`${this.apiUrl}/${entryId}`);
+  }
+
+  updateGameStatus(entryId: number, entry: UpdateGameStatus): Observable<GameLibraryEntryDetails>{
+    return this.http.patch<GameLibraryEntryDetails>(`${this.apiUrl}/${entryId}/status`, entry)
+  }
+
+  updateGameRating(entryId: number, entry: UpdateGameRating): Observable<GameLibraryEntryDetails>{
+    return this.http.patch<GameLibraryEntryDetails>(`${this.apiUrl}/${entryId}/rating`, entry)
   }
 }
