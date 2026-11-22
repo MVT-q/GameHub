@@ -10,4 +10,12 @@
   <p>{{ getGenreLabel(game.genre) }}</p>
 
   <p>{{ game.updatedAt ?? '—' }}</p>
+
+  @if (isInLibrary) {
+    <button type="button" disabled>In library</button>
+  } @else {
+    <button type="button" [disabled]="isAddingToLibrary" (click)="addToLibrary()">
+      {{ isAddingToLibrary ? 'Adding...' : 'Add to library' }}
+    </button>
+  }
 }

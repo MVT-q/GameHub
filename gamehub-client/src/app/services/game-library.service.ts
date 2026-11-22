@@ -4,6 +4,7 @@ import { GameLibraryQuery } from '../models/game-library/game-library-query.mode
 import { Observable } from 'rxjs';
 import { PagedResult } from '../common/paged-result.model';
 import { GameLibraryEntry } from '../models/game-library/game-library-entry.model';
+import { AddGameToLibrary } from '../models/game-library/add-game-to-library.model';
 
 @Injectable({
   providedIn: 'root',
@@ -33,9 +34,21 @@ export class GameLibraryService {
     }
 
     params = params.set('page', query.page);
-    
+
     params = params.set('pageSize', query.pageSize);
 
     return this.http.get<PagedResult<GameLibraryEntry>>(this.apiUrl, { params });
+  }
+
+  deleteGameEntry(entryId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${entryId}`);
+  }
+
+  addGameToLibrary(game: AddGameToLibrary): Observable<GameLibraryEntry> {
+    return this.http.post<GameLibraryEntry>(`${this.apiUrl}`, game);
+  }
+
+  isGameInLibrary(gameId: number): Observable<boolean> {
+    return this.http.get<boolean>(`${this.apiUrl}/contains/${gameId}`);
   }
 }

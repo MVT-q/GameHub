@@ -181,6 +181,11 @@ namespace GameHubAPI.Sevices
             return ToGameLibraryEntryDetailsDto(entry);
         }
 
+        public async Task<bool> IsGameInLibraryAsync(int gameId, int currentUserId)
+        {
+            return await _context.GameLibraryEntries.AnyAsync(e => e.GameId == gameId && e.UserId == currentUserId);
+        }
+
         private static GameLibraryEntryDetailsDto ToGameLibraryEntryDetailsDto(GameLibraryEntry entry)
         {
             return new GameLibraryEntryDetailsDto

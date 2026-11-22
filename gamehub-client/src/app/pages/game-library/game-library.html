@@ -36,6 +36,7 @@
   @for (entry of entries; track entry.id) {
     <p>{{ entry.title }}</p>
     <p>{{ entry.rating }}</p>
+    <button type="button" (click)="deleteGameEntry(entry.id)">Delete</button>
   }
 } @else {
   <p>No games found</p>

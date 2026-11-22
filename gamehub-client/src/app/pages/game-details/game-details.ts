@@ -3,6 +3,8 @@ import { Game } from '../../models/game/game.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GameService } from '../../services/game.service';
 import { GameGenre } from '../../enums/game-genre';
+import { GameLibraryService } from '../../services/game-library.service';
+import { AddGameToLibrary } from '../../models/game-library/add-game-to-library.model';
 
 @Component({
   selector: 'app-game-details',
@@ -25,10 +27,14 @@ export class GameDetails implements OnInit {
     { value: GameGenre.Horror, label: 'Horror' },
   ];
 
+  isInLibrary = false;
+  isAddingToLibrary = false;
+
   constructor(
     private readonly route: ActivatedRoute,
     private readonly gameService: GameService,
     private readonly router: Router,
+    private readonly gameLibraryService: GameLibraryService,
   ) {}
 
   ngOnInit(): void {
@@ -42,6 +48,15 @@ export class GameDetails implements OnInit {
         console.error(error);
       },
     });
+
+    this.gameLibraryService.isGameInLibrary(this.gameId).subscribe({
+      next: (result) => {
+        this.isInLibrary = result;
+      },
+      error: (error) => {
+        console.error(error);
+      },
+    });
   }
 
   getGenreLabel(genre: GameGenre): string {
@@ -50,5 +65,24 @@ export class GameDetails implements OnInit {
 
   toEditGame(): void {
     this.router.navigate(['/game-catalog', this.gameId, 'edit']);
+  }
+
+  addToLibrary(): void {
+    const game: AddGameToLibrary = {
+      gameId: this.gameId,
+    };
+
+    this.isAddingToLibrary = true;
+
+    this.gameLibraryService.addGameToLibrary(game).subscribe({
+      next: () => {
+        this.isInLibrary = true;
+        this.isAddingToLibrary = false;
+      },
+      error: (error) => {
+        this.isAddingToLibrary = false;
+        console.error(error);
+      },
+    });
   }
 }

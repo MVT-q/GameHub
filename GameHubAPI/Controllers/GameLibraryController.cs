@@ -70,5 +70,13 @@ namespace GameHubAPI.Controllers
 
             return Ok(entry);
         }
+
+        [HttpGet("contains/{gameId:int}")]
+        public async Task<ActionResult<bool>> IsGameInLibrary(int gameId)
+        {
+            var result = await _gameLibraryService.IsGameInLibraryAsync(gameId, CurrentUserId);
+
+            return Ok(result);
+        }
     }
 }

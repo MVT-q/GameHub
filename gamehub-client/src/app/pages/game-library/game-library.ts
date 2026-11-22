@@ -83,6 +83,17 @@ export class GameLibrary implements OnInit {
     });
   }
 
+  deleteGameEntry(entryId: number): void {
+    this.gameLibraryService.deleteGameEntry(entryId).subscribe({
+      next: () => {
+        this.getLibraryEntries();
+      },
+      error: (error) => {
+        console.error(error);
+      },
+    });
+  }
+
   nextPage(): void {
     if (this.currentPage >= this.totalPages) {
       return;
