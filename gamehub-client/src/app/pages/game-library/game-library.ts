@@ -42,7 +42,7 @@ export class GameLibrary implements OnInit {
   sortByRating: boolean | undefined = undefined;
 
   currentPage = 1;
-  pageSize = 2;
+  pageSize = 50;
   totalCount = 0;
 
   get totalPages(): number {

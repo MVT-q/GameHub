@@ -43,7 +43,7 @@ export class GameCatalog implements OnInit {
   descending: boolean | undefined;
 
   currentPage = 1;
-  pageSize = 2;
+  pageSize = 50;
   totalCount = 0;
 
   get totalPages(): number {

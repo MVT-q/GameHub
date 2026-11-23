@@ -7,10 +7,11 @@ import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { UpdateGameStatus } from '../../models/game-library/update-game-status.model';
 import { UpdateGameRating } from '../../models/game-library/update-game-rating.model';
+import { GameLibraryNotes } from '../game-library-notes/game-library-notes';
 
 @Component({
   selector: 'app-game-library-details',
-  imports: [FormsModule],
+  imports: [FormsModule, GameLibraryNotes],
   templateUrl: './game-library-details.html',
   styleUrl: './game-library-details.css',
 })
